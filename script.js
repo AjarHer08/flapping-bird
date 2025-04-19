@@ -143,9 +143,16 @@ function gameLoop() {
   requestAnimationFrame(gameLoop);
 }
 
-pauseButton.addEventListener('click', () => {
+function togglePause() {
   isPaused = !isPaused;
   pauseButton.textContent = isPaused ? '▶' : '||';
+  if (!isPaused && !gameOver) {
+    gameLoop();
+  }
+}
+
+pauseButton.addEventListener('click', () => {
+  togglePause();
 });
 
 window.addEventListener('keydown', e => {
@@ -157,11 +164,7 @@ window.addEventListener('keydown', e => {
       bird.velocity = bird.lift;
     }
   } else if (e.code === 'Escape') {
-    isPaused = !isPaused;
-    pauseButton.textContent = isPaused ? '▶' : '||';
-    if (!isPaused && !gameOver) {
-      gameLoop();
-    }
+    togglePause();
   }
 });
 
