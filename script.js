@@ -36,8 +36,11 @@ let playerName = 'Player';
 // Prompt for player name at game start
 function promptPlayerName() {
   const name = prompt('Enter your name:', 'Player');
+  console.log('Player name entered:', name); // Debug log
   if (name && name.trim() !== '') {
     playerName = name.trim();
+  } else {
+    console.log('No valid player name entered, using default:', playerName);
   }
 }
 
@@ -149,13 +152,24 @@ function resetGame() {
   // Update highScore only if current score is greater
   if (score > highScore) {
     highScore = score;
-    saveData(); // Save immediately after updating highScore
   }
   // Add current player's name and score to leaderboard if > 0
   if (score > 0) {
-    leaderboard.push({ name: playerName, score: score });
-    saveData();
+    // Check if player already exists in leaderboard
+    const existingIndex = leaderboard.findIndex(entry => entry.name === playerName);
+    if (existingIndex !== -1) {
+      // Update score if current score is higher
+      if (score > leaderboard[existingIndex].score) {
+        leaderboard[existingIndex].score = score;
+      }
+    } else {
+      // Add new player entry
+      leaderboard.push({ name: playerName, score: score });
+    }
   }
+  // Sort leaderboard descending by score
+  leaderboard.sort((a, b) => b.score - a.score);
+  saveData();
 
   bird.y = 150;
   bird.velocity = 0;
