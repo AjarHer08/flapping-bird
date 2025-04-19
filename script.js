@@ -26,6 +26,7 @@ let isPaused = false;
 let isGameStarted = false;
 let isLeaderboardView = false;
 let isAndroid = /Android/i.test(navigator.userAgent);
+let isDesktop = !isAndroid;
 
 // Load highScore and leaderboard from localStorage
 // Store leaderboard as array of objects {name, score}
@@ -287,12 +288,11 @@ window.addEventListener('touchstart', e => {
   }
 }, { passive: false });
 
+// Load data and prompt player name immediately for all platforms
 loadData();
+promptPlayerName();
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Prompt player name before starting the game
-  promptPlayerName();
-
   // Add Android-specific leaderboard button
   if (isAndroid) {
     const leaderboardButton = document.createElement('button');
@@ -324,5 +324,35 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.body.appendChild(leaderboardButton);
+  }
+
+  // Add desktop leaderboard button
+  if (isDesktop) {
+    const desktopLeaderboardButton = document.createElement('button');
+    desktopLeaderboardButton.textContent = 'Show Leaderboard';
+    desktopLeaderboardButton.style.position = 'fixed';
+    desktopLeaderboardButton.style.top = '10px';
+    desktopLeaderboardButton.style.right = '10px';
+    desktopLeaderboardButton.style.zIndex = '10000';
+    desktopLeaderboardButton.style.padding = '12px 18px';
+    desktopLeaderboardButton.style.fontSize = '16px';
+    desktopLeaderboardButton.style.fontWeight = 'bold';
+    desktopLeaderboardButton.style.backgroundColor = '#28a745'; // Green color for desktop
+    desktopLeaderboardButton.style.color = 'white';
+    desktopLeaderboardButton.style.border = 'none';
+    desktopLeaderboardButton.style.borderRadius = '8px';
+    desktopLeaderboardButton.style.boxShadow = '0 4px 8px rgba(0,0,0,0.3)';
+    desktopLeaderboardButton.style.opacity = '0.95';
+    desktopLeaderboardButton.style.cursor = 'pointer';
+
+    desktopLeaderboardButton.addEventListener('click', () => {
+      isLeaderboardView = !isLeaderboardView;
+      if (!isLeaderboardView && !isPaused && !gameOver) {
+        gameLoop();
+      }
+      desktopLeaderboardButton.textContent = isLeaderboardView ? 'Hide Leaderboard' : 'Show Leaderboard';
+    });
+
+    document.body.appendChild(desktopLeaderboardButton);
   }
 });
