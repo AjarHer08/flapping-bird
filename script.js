@@ -13,13 +13,13 @@ const bird = {
 };
 
 const pipes = [];
-const pipeWidth = 30;
-const pipeGap = 250;
+const pipeWidth = 20;
+const pipeGap = 230;
 let frameCount = 0;
 let score = 0;
 let highScore = 0;
 let gameOver = false;
-let baseSpeed = 0.8;
+let baseSpeed = 1.0;
 let speed = baseSpeed;
 let isPaused = false;
 
